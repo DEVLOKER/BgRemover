@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+        <title>Background Remover</title>
+        <link rel="stylesheet" href="style/upload.css">
+
+        <script>
+            const handleFilesSelect = (input)=>{
+                // let files = input.files;
+                // for (let i = 0; i<files.length; i++) {
+                //     console.log(files[i])
+                // }
+                document.formUpload.submit();
+            }
+        </script>
+    </head>
+    <body>
+
+        <div class="headerContainer" >
+            <div>
+                <h1 class="info appTitle" >Background Remover</h1>
+            </div>
+            <div>
+                <span class="info" >Upload images, the program will remove the background automatically</span>
+                <span class="info" >Uploaded images will be discarded automatically after 60 minutes</span>
+                <span class="info" >this program is developed based on <a href="https://github.com/ZHKKKe/MODNet" title="author : Zhanghan Ke and Jiayu Sun and Kaican Li and Qiong Yan and Rynson W.H. Lau, title : MODNet: Real-Time Trimap-Free Portrait Matting via Objective Decomposition, booktitle : AAAI, year : 2022" target="_blank" >ModNet</a></span>
+            </div>
+        </div>
+
+
+
+        <div class="formContainer" >
+            <form name="formUpload" action="/upload" method="post" enctype="multipart/form-data">
+                <label for="filesInput">
+                    <div class="addFiles" > <p>+</p> </div>
+                </label>
+                <input id="filesInput" type="file" name="file" multiple onchange="handleFilesSelect(this)" />
+                <!-- <input type="submit" value="Upload"> -->
+            </form>
+        </div>
+
+        <div class="imagesContainer">
+
+            {%- if uploaded_files %}
+            <fieldset class="uploadedFiles">
+                <legend><h2 class="info" >Input</h2></legend>
+                {%- for code, file in uploaded_files.items() %}
+                <div class="imageContainer" style="background-image: url(/get/{{ code }});">
+                    <!-- <img src="/get/{{ code }}" /> -->
+                    <p class="hiddenAction info"><a href="/delete/{{ code }}">Delete</a></p>
+                </div>
+                {% endfor %}
+            </fieldset>
+            {% endif %}
+
+
+            {%- if processed_files %}
+            <fieldset class="processedFiles">
+                <legend><h2 class="info active" >Output</h2></legend>
+                {%- for code, file in processed_files.items() %}
+                <div class="imageContainer" style="background-image: url(/download/{{ code }});" >
+                    <!-- <img src="/download/{{ code }}" /> -->
+                    <p class="hiddenAction info"><a href="/download/{{ code }}" download="{{ code }}">Download</a></p>
+                </div>
+                {% endfor %}
+            </fieldset>
+            {% endif %}
+
+        </div>
+
+
+    </body>
+</html>

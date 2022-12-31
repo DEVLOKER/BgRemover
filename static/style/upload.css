@@ -1,0 +1,122 @@
+.headerContainer{
+    position: fixed;
+    display: flex; justify-content: space-around; align-items: center;
+    width: 100%;
+    background: aliceblue;
+    top: 0;
+    left: 0;
+    box-shadow: 0px 0px 5px 1px #ddd;
+    z-index: 10;
+}
+
+.headerContainer div{
+    display: flex; justify-content: center; align-items: center; flex-direction: column;
+}
+
+.headerContainer span.info {
+    font-size: 12px;
+}
+
+.info {
+    color: #888; font-family: monospace, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+}
+.info.active {
+    color: #5a79e8;
+}
+p.info { font-size: 12px; }
+.appTitle { color: #666; }
+
+
+.formContainer {
+    margin: 100px 0px 20px 0px;
+    display: flex; justify-content: center; align-items: center;
+}
+.addFiles {
+    background: #5a79e8;
+    width: 60px; height: 60px;
+    display: flex; justify-content: center; align-items: center;
+    border-radius: 15px;
+    box-shadow: 0px 0px 7px 1px #aaa;
+    cursor: pointer;
+}
+.addFiles p{
+    font-size: 50px;
+    color: #fff;
+}
+#filesInput {
+    display: none;
+    /* visibility: hidden; */
+    width: 0px; height: 0px; opacity: 0px; position: fixed; top: -100%;
+}
+
+
+.imagesContainer {
+    width: 100%;
+    display: flex; justify-content: center; align-items: flex-start; flex-direction: row; flex-wrap: nowrap;
+}
+fieldset {
+    border: 0px #aaaaaa solid;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px 1px #ddd;
+    padding: 20px;
+    margin: 20px;
+    display: flex; justify-content: center; align-items: center; flex-direction: column; flex-wrap: nowrap;
+}
+fieldset.uploadedFiles {
+    background: aliceblue;
+}
+fieldset.processedFiles {
+    background: #fff;
+}
+
+legend {
+    padding: 0px 14px;
+    background: #eee;
+    border-radius: 5px;
+    line-height: 0px;
+    text-align: center;
+}
+
+
+fieldset .imageContainer{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px 1px #ddd;
+    position: relative;
+    background-size: cover;
+    width: 300px;
+    min-height: 300px;
+    height: auto;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+fieldset .hiddenAction {
+    position: absolute;
+    bottom: -15px;
+    width: 100%;
+    padding: 10px 0px;
+    border-radius: 0px 0px 10px 10px;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s linear;
+}
+fieldset.uploadedFiles .hiddenAction {
+    background: rgba(255, 0, 0, 0.8);
+}
+fieldset.processedFiles .hiddenAction {
+    background: rgba(0, 255, 0, 0.8);
+}
+fieldset .hiddenAction a{
+    width: 100%;
+    text-decoration: none;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bolder;
+}
+fieldset .imageContainer:hover > .hiddenAction{
+    visibility: visible;
+    opacity: 1;
+}
