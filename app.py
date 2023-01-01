@@ -83,9 +83,12 @@ def delete(code):
     files = __get_files(UPLOAD_FOLDER)
     if code in files:
         path1 = os.path.join(UPLOAD_FOLDER, code)
-        path2 = os.path.join(PROCESSED_FOLDER, code.split('.')[0] + '.png')
+        name = code.split('.')[0]
+        path2 = os.path.join(PROCESSED_FOLDER, name + '.png')
+        path3 = os.path.join(PROCESSED_FOLDER, name + '_' + BackgroundRemover.RESULT_TYPE + '.webm')
         if os.path.exists(path1):
             os.path.exists(path2) and os.remove(path2)
+            os.path.exists(path3) and os.remove(path3)
             os.remove(path1)
             return redirect(url_for('index'))
     abort(404)
@@ -94,10 +97,22 @@ def delete(code):
 
 def __get_files(path):
     files = {}
-    for filename in os.listdir(path):
-        if os.path.isfile(os.path.join(path, filename)):
-            files[filename] = filename
+    # os.chdir(path)
+    # listdir = sorted(filter(os.path.isfile, os.listdir(path)), key=os.path.getmtime)
+    # print(listdir)
+    name_list = os.listdir(path)
+    full_list = [os.path.join(path,i) for i in name_list]
+    time_sorted_list = sorted(full_list, key=os.path.getmtime)
+    sorted_filename_list = [ os.path.basename(i) for i in time_sorted_list]
+    sorted_filename_list.reverse()
+
+    for filename in sorted_filename_list:
+        files[filename] = filename
     return files
+    # for filename in os.listdir(path):
+    #     if os.path.isfile(os.path.join(path, filename)):
+    #         files[filename] = filename
+    # return files
 
 
 

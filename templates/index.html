@@ -12,7 +12,12 @@
                 // for (let i = 0; i<files.length; i++) {
                 //     console.log(files[i])
                 // }
+                let processingContainer = document.getElementsByClassName("processingContainer")[0]
+                processingContainer.style.opacity = "1"
+                processingContainer.style.visibility = "visible"
                 document.formUpload.submit();
+                // processingContainer.style.opacity = "0"
+                // processingContainer.style.visibility = "hidden"
             }
         </script>
     </head>
@@ -23,8 +28,8 @@
                 <h1 class="info appTitle" >Background Remover</h1>
             </div>
             <div>
-                <span class="info" >Upload images, the program will remove the background automatically</span>
-                <span class="info" >Uploaded images will be discarded automatically after 60 minutes</span>
+                <span class="info" >Upload images & videos, the program will remove the background automatically</span>
+                <span class="info" >Uploaded images & videos will be discarded automatically after 60 minutes</span>
                 <span class="info" >this program is developed based on <a href="https://github.com/ZHKKKe/MODNet" title="author : Zhanghan Ke and Jiayu Sun and Kaican Li and Qiong Yan and Rynson W.H. Lau, title : MODNet: Real-Time Trimap-Free Portrait Matting via Objective Decomposition, booktitle : AAAI, year : 2022" target="_blank" >ModNet</a></span>
             </div>
         </div>
@@ -36,30 +41,36 @@
                 <label for="filesInput">
                     <div class="addFiles" > <p>+</p> </div>
                 </label>
-                <input id="filesInput" type="file" name="file" multiple onchange="handleFilesSelect(this)" />
+                <input id="filesInput" type="file" name="file" multiple onchange="handleFilesSelect(this)" accept="image/png, image/jpeg, image/jpg, video/mp4" />
                 <!-- <input type="submit" value="Upload"> -->
             </form>
         </div>
 
-        <div class="filessContainer">
+        <div class="filesContainer">
 
             {%- if uploaded_files %}
             <fieldset class="uploadedFiles">
                 <legend><h2 class="info" >Input</h2></legend>
                 {%- for code, file in uploaded_files.items() %}
 
-                    {%- if code.split('.')[1] in ["jpg", "jpeg"] %}
+                    {%- if code.split('.')[1] in ["jpg", "jpeg", "png"] %}
                     <div class="imageContainer" style="background-image: url(/get/{{ code }});">
-                        <!-- <img src="/get/{{ code }}" /> -->
-                        <p class="hiddenAction info"><a href="/delete/{{ code }}">Delete</a></p>
+                        <div class="hiddenAction" >
+                            <a href="/delete/{{ code }}" ><p class="info">Delete</p></a>
+                        </div>
                     </div>
                     {% endif %}
 
                     {% if code.split('.')[1] in ["mp4"] %}
-                    <video class="videoContainer" controls>
-                        <source src="/get/{{ code }}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
+                    <div class="videoContainer">
+                        <video controls>
+                            <source src="/get/{{ code }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="hiddenAction" >
+                            <a href="/delete/{{ code }}" ><p class="info">Delete</p></a>
+                        </div>
+                    </div>
                     {% endif %}
 
                 {% endfor %}
@@ -74,22 +85,33 @@
 
                     {%- if code.split('.')[1] in ["png"] %}
                     <div class="imageContainer" style="background-image: url(/download/{{ code }});" >
-                        <!-- <img src="/download/{{ code }}" /> -->
-                        <p class="hiddenAction info"><a href="/download/{{ code }}" download="{{ code }}">Download</a></p>
+                        <div class="hiddenAction" >
+                            <a href="/download/{{ code }}" download="{{ code }}"><p class="info">Download</p></a>
+                        </div>
                     </div>
                     {% endif %}
 
                     {% if code.split('.')[1] in ["webm"] %}
-                    <video class="videoContainer" controls>
-                        <source src="/download/{{ code }}" type="video/webm">
-                        Your browser does not support the video tag.
-                    </video>
+                    <div class="videoContainer">
+                        <video controls>
+                            <source src="/download/{{ code }}" type="video/webm">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="hiddenAction" >
+                            <a href="/download/{{ code }}" download="{{ code }}"><p class="info">Download</p></a>
+                        </div>
+                    </div>
                     {% endif %}
 
                 {% endfor %}
             </fieldset>
             {% endif %}
 
+        </div>
+
+
+        <div class="processingContainer" >
+            <p class="info" >Processing ...</p>
         </div>
 
 

@@ -21,6 +21,7 @@ class BackgroundRemover(object):
     # TMP_PATH = "files/tmp"
     # define hyper-parameters
     REF_SIZE = 512
+    RESULT_TYPE = 'fg' # matte - save the alpha matte; fg - save the foreground
 
     def __init__(self):
         # define image to tensor transform
@@ -104,10 +105,10 @@ class BackgroundRemover(object):
 
     def processVideo(self, vi_name):
 
-        result_type = 'fg' # matte - save the alpha matte; fg - save the foreground
-        matte_name = os.path.splitext(vi_name)[0] + '_{0}.webm'.format(result_type) # mp4 avi webm
+        
+        matte_name = os.path.splitext(vi_name)[0] + '_{0}.webm'.format(BackgroundRemover.RESULT_TYPE) # mp4 avi webm
         result = os.path.join(BackgroundRemover.OUTPUT_PATH, matte_name)
-        alpha_matte = True if result_type == 'matte' else False
+        alpha_matte = True if BackgroundRemover.RESULT_TYPE == 'matte' else False
         fps = 30
 
         # video capture
@@ -174,13 +175,17 @@ class BackgroundRemover(object):
         # load files
         files = os.listdir(BackgroundRemover.INPUT_PATH)
         for fileName in files:
+            name = fileName.split('.')[0]
             extension = fileName.split('.')[1]
-            if extension in ["png", "jpg", "jpeg"]:
-                print('Process image: {0}'.format(fileName))
-                self.processImage(fileName)
+            
+            if extension in ["jpg", "jpeg", "png"]:
+                if not os.path.exists(os.path.join(BackgroundRemover.OUTPUT_PATH, name + '.png')):
+                    print('Process image: {0}'.format(fileName))
+                    self.processImage(fileName)
             if extension in ["mp4"]:
-                print('Process video: {0}'.format(fileName))
-                self.processVideo(fileName)
+                if not os.path.exists(os.path.join(BackgroundRemover.OUTPUT_PATH, name +'_{0}.webm'.format(BackgroundRemover.RESULT_TYPE)) ):
+                    print('Process video: {0}'.format(fileName))
+                    self.processVideo(fileName)
 
 
     def __combine(self, image, matte):
