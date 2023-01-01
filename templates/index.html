@@ -41,16 +41,27 @@
             </form>
         </div>
 
-        <div class="imagesContainer">
+        <div class="filessContainer">
 
             {%- if uploaded_files %}
             <fieldset class="uploadedFiles">
                 <legend><h2 class="info" >Input</h2></legend>
                 {%- for code, file in uploaded_files.items() %}
-                <div class="imageContainer" style="background-image: url(/get/{{ code }});">
-                    <!-- <img src="/get/{{ code }}" /> -->
-                    <p class="hiddenAction info"><a href="/delete/{{ code }}">Delete</a></p>
-                </div>
+
+                    {%- if code.split('.')[1] in ["jpg", "jpeg"] %}
+                    <div class="imageContainer" style="background-image: url(/get/{{ code }});">
+                        <!-- <img src="/get/{{ code }}" /> -->
+                        <p class="hiddenAction info"><a href="/delete/{{ code }}">Delete</a></p>
+                    </div>
+                    {% endif %}
+
+                    {% if code.split('.')[1] in ["mp4"] %}
+                    <video class="videoContainer" controls>
+                        <source src="/get/{{ code }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    {% endif %}
+
                 {% endfor %}
             </fieldset>
             {% endif %}
@@ -60,10 +71,21 @@
             <fieldset class="processedFiles">
                 <legend><h2 class="info active" >Output</h2></legend>
                 {%- for code, file in processed_files.items() %}
-                <div class="imageContainer" style="background-image: url(/download/{{ code }});" >
-                    <!-- <img src="/download/{{ code }}" /> -->
-                    <p class="hiddenAction info"><a href="/download/{{ code }}" download="{{ code }}">Download</a></p>
-                </div>
+
+                    {%- if code.split('.')[1] in ["png"] %}
+                    <div class="imageContainer" style="background-image: url(/download/{{ code }});" >
+                        <!-- <img src="/download/{{ code }}" /> -->
+                        <p class="hiddenAction info"><a href="/download/{{ code }}" download="{{ code }}">Download</a></p>
+                    </div>
+                    {% endif %}
+
+                    {% if code.split('.')[1] in ["webm"] %}
+                    <video class="videoContainer" controls>
+                        <source src="/download/{{ code }}" type="video/webm">
+                        Your browser does not support the video tag.
+                    </video>
+                    {% endif %}
+
                 {% endfor %}
             </fieldset>
             {% endif %}

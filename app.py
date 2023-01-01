@@ -15,7 +15,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['PROCESSED_FOLDER'] = PROCESSED_FOLDER
 app.config['SECRET_KEY'] = 'Sick Rat'
 
-now = time.time()
+now = time.time() # datetime.utcnow().strftime("%Y%m%dT%H%M%S")
 
 backgroundRemover = BackgroundRemover()
 
@@ -23,8 +23,8 @@ backgroundRemover = BackgroundRemover()
 @app.route('/')
 def index():
     cleanFiles()
-    uploaded_files = _get_files(UPLOAD_FOLDER)
-    processed_files = _get_files(PROCESSED_FOLDER)
+    uploaded_files = __get_files(UPLOAD_FOLDER)
+    processed_files = __get_files(PROCESSED_FOLDER)
     return render_template('index.html', uploaded_files=uploaded_files, processed_files=processed_files)
 
 
@@ -32,7 +32,7 @@ def index():
 
 @app.route('/get/<code>', methods=['GET'])
 def get(code):
-    files = _get_files(UPLOAD_FOLDER)
+    files = __get_files(UPLOAD_FOLDER)
     if code in files:
         path = os.path.join(UPLOAD_FOLDER, code)
         if os.path.exists(path):
@@ -42,7 +42,7 @@ def get(code):
 
 @app.route('/download/<code>', methods=['GET'])
 def download(code):
-    files = _get_files(PROCESSED_FOLDER)
+    files = __get_files(PROCESSED_FOLDER)
     if code in files:
         path = os.path.join(PROCESSED_FOLDER, code)
         if os.path.exists(path):
@@ -80,7 +80,7 @@ def upload():
 
 @app.route('/delete/<code>', methods=['GET'])
 def delete(code):
-    files = _get_files(UPLOAD_FOLDER)
+    files = __get_files(UPLOAD_FOLDER)
     if code in files:
         path1 = os.path.join(UPLOAD_FOLDER, code)
         path2 = os.path.join(PROCESSED_FOLDER, code.split('.')[0] + '.png')
@@ -92,7 +92,7 @@ def delete(code):
 
 
 
-def _get_files(path):
+def __get_files(path):
     files = {}
     for filename in os.listdir(path):
         if os.path.isfile(os.path.join(path, filename)):
@@ -101,8 +101,8 @@ def _get_files(path):
 
 
 
-def cleanFiles(): # 30 * 86400
-    timer = 60 * 60 # 60 minutes
+def cleanFiles(): # 30 * 86400 # 60 * 60
+    timer = 3000000 * 86400 # 60 minutes
     for filename in os.listdir(UPLOAD_FOLDER):
         path = os.path.join(UPLOAD_FOLDER, filename)
         if os.path.getmtime(path) < now - timer:

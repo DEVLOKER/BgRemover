@@ -51,10 +51,11 @@ p.info { font-size: 12px; }
 }
 
 
-.imagesContainer {
+.filessContainer {
     width: 100%;
     display: flex; justify-content: center; align-items: flex-start; flex-direction: row; flex-wrap: nowrap;
 }
+
 fieldset {
     border: 0px #aaaaaa solid;
     border-radius: 10px;
@@ -79,7 +80,7 @@ legend {
 }
 
 
-fieldset .imageContainer{
+fieldset .imageContainer, fieldset .videoContainer{
     margin-top: 10px;
     margin-bottom: 10px;
     border-radius: 10px;
