@@ -30,83 +30,86 @@
             <div>
                 <span class="info" >Upload images & videos, the program will remove the background automatically</span>
                 <span class="info" >Uploaded images & videos will be discarded automatically after 60 minutes</span>
-                <span class="info" >this program is developed based on <a href="https://github.com/ZHKKKe/MODNet" title="author : Zhanghan Ke and Jiayu Sun and Kaican Li and Qiong Yan and Rynson W.H. Lau, title : MODNet: Real-Time Trimap-Free Portrait Matting via Objective Decomposition, booktitle : AAAI, year : 2022" target="_blank" >ModNet</a></span>
+                <!-- <span class="info" >this program is developed based on <a href="https://github.com/ZHKKKe/MODNet" title="author : Zhanghan Ke and Jiayu Sun and Kaican Li and Qiong Yan and Rynson W.H. Lau, title : MODNet: Real-Time Trimap-Free Portrait Matting via Objective Decomposition, booktitle : AAAI, year : 2022" target="_blank" >ModNet</a></span> -->
             </div>
         </div>
 
 
-
-        <div class="formContainer" >
-            <form name="formUpload" action="/upload" method="post" enctype="multipart/form-data">
-                <label for="filesInput">
-                    <div class="addFiles" > <p>+</p> </div>
-                </label>
-                <input id="filesInput" type="file" name="file" multiple onchange="handleFilesSelect(this)" accept="image/png, image/jpeg, image/jpg, video/mp4" />
-                <!-- <input type="submit" value="Upload"> -->
-            </form>
-        </div>
-
-        <div class="filesContainer">
-
-            {%- if uploaded_files %}
-            <fieldset class="uploadedFiles">
-                <legend><h2 class="info" >Input</h2></legend>
-                {%- for code, file in uploaded_files.items() %}
-
-                    {%- if code.split('.')[1] in ["jpg", "jpeg", "png"] %}
-                    <div class="imageContainer" style="background-image: url(/get/{{ code }});">
-                        <div class="hiddenAction" >
-                            <a href="/delete/{{ code }}" ><p class="info">Delete</p></a>
+        <div class="bodyContainer">
+            <div class="formContainer" >
+                <form name="formUpload" action="/upload" method="post" enctype="multipart/form-data">
+                    <label for="filesInput">
+                        <div class="addFiles" > <p>+</p> </div>
+                    </label>
+                    <input id="filesInput" type="file" name="file" multiple onchange="handleFilesSelect(this)" accept="image/png, image/jpeg, image/jpg, video/mp4" />
+                    <!-- <input type="submit" value="Upload"> -->
+                </form>
+            </div>
+    
+            <div class="filesContainer">
+    
+                {%- if uploaded_files %}
+                <fieldset class="uploadedFiles">
+                    <legend><h2 class="info" >Input</h2></legend>
+                    {%- for code, file in uploaded_files.items() %}
+    
+                        {%- if code.split('.')[1] in ["jpg", "jpeg", "png"] %}
+                        <div class="imageContainer" style="background-image: url(/get/{{ code }});">
+                            <div class="hiddenAction" >
+                                <a href="/delete/{{ code }}" ><p class="info">Delete</p></a>
+                            </div>
                         </div>
-                    </div>
-                    {% endif %}
-
-                    {% if code.split('.')[1] in ["mp4"] %}
-                    <div class="videoContainer">
-                        <video controls>
-                            <source src="/get/{{ code }}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                        <div class="hiddenAction" >
-                            <a href="/delete/{{ code }}" ><p class="info">Delete</p></a>
+                        {% endif %}
+    
+                        {% if code.split('.')[1] in ["mp4"] %}
+                        <div class="videoContainer">
+                            <video controls>
+                                <source src="/get/{{ code }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="hiddenAction" >
+                                <a href="/delete/{{ code }}" ><p class="info">Delete</p></a>
+                            </div>
                         </div>
-                    </div>
-                    {% endif %}
-
-                {% endfor %}
-            </fieldset>
-            {% endif %}
-
-
-            {%- if processed_files %}
-            <fieldset class="processedFiles">
-                <legend><h2 class="info active" >Output</h2></legend>
-                {%- for code, file in processed_files.items() %}
-
-                    {%- if code.split('.')[1] in ["png"] %}
-                    <div class="imageContainer" style="background-image: url(/download/{{ code }});" >
-                        <div class="hiddenAction" >
-                            <a href="/download/{{ code }}" download="{{ code }}"><p class="info">Download</p></a>
+                        {% endif %}
+    
+                    {% endfor %}
+                </fieldset>
+                {% endif %}
+    
+    
+                {%- if processed_files %}
+                <fieldset class="processedFiles">
+                    <legend><h2 class="info active" >Output</h2></legend>
+                    {%- for code, file in processed_files.items() %}
+    
+                        {%- if code.split('.')[1] in ["png"] %}
+                        {% set name = code.split('.')[0] %}
+                        <div class="imageContainer" style="background-image: url(/download/{{ name+'.jpg' }});" >
+                            <div class="hiddenAction" >
+                                <a href="/download/{{ name+'.png' }}" download="{{ name+'.png' }}"><p class="info png">PNG</p></a>
+                                <a href="/download/{{ name+'.jpg' }}" download="{{ name+'.jpg' }}"><p class="info jpg">JPG</p></a>
+                            </div>
                         </div>
-                    </div>
-                    {% endif %}
-
-                    {% if code.split('.')[1] in ["webm"] %}
-                    <div class="videoContainer">
-                        <video controls>
-                            <source src="/download/{{ code }}" type="video/webm">
-                            Your browser does not support the video tag.
-                        </video>
-                        <div class="hiddenAction" >
-                            <a href="/download/{{ code }}" download="{{ code }}"><p class="info">Download</p></a>
+                        {% endif %}
+    
+                        {% if code.split('.')[1] in ["webm"] %}
+                        <div class="videoContainer">
+                            <video controls>
+                                <source src="/download/{{ code }}" type="video/webm">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="hiddenAction" >
+                                <a href="/download/{{ code }}" download="{{ code }}"><p class="info">Download</p></a>
+                            </div>
                         </div>
-                    </div>
-                    {% endif %}
-
-                {% endfor %}
-            </fieldset>
-            {% endif %}
-
+                        {% endif %}
+    
+                    {% endfor %}
+                </fieldset>
+                {% endif %}
+    
+            </div>
         </div>
 
 
@@ -114,6 +117,47 @@
             <p class="info" >Processing ...</p>
         </div>
 
+        <div class="FooterContainer" >
+            <div class="col">
+                <h4 class="info title"><strong>About</strong></h4>
+                <p class="info">
+                        Background Remover is a python app, developed based on <a class="info link" href="https://github.com/ZHKKKe/MODNet" title="author : Zhanghan Ke and Jiayu Sun and Kaican Li and Qiong Yan and Rynson W.H. Lau, title : MODNet: Real-Time Trimap-Free Portrait Matting via Objective Decomposition, booktitle : AAAI, year : 2022" target="_blank" >ModNet</a>, 
+                        it allows to remove background of multiple images and videos, and download the results
+                        source code available on : <a class="info link" href="https://github.com/devloker/bgReamover" target="_blank">GitHub</a>
+                </p>
+            </div>
+            <div class="col" >
+                <h4 class="info title"><strong>Follow Us</strong></h4>
+                <ul class="list links">
+                    <li class="list-item">
+                        <a class="info link" href="http://www.linkedin.com/in/dev-loker" target="_blank">LinkedIn</a>
+                    </li>
+                    <li class="list-item">
+                        <a class="info link" href="https://github.com/devloker" target="_blank">GitHub</a>
+                    </li>
+                    <li class="list-item">
+                        <a class="info link" href="https://www.upwork.com/freelancers/~01abb360bdb5d8e5df" target="_blank">Upwork</a>
+                    </li>
+                    <li class="list-item">
+                        <a class="info link" href="mailto:cntcts.dev.loker@outlook.com" target="_blank">Email</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col">
+                <h4 class="info title"><strong>Other Apps</strong></h4>
+                <ul class="list links">
+                    <li class="list-item">
+                        <a class="info link" href="https://play.google.com/store/apps/details?id=org.qtproject.opera_peinture" >Opera Peinture</a>
+                    </li>
+                    <li class="list-item">
+                        <a class="info link" href="http://www.amazon.com/gp/mas/dl/android?p=dev.loker.games.digitso">Digitso</a>
+                    </li>
+                    <li class="list-item">
+                        <a class="info link" href="http://www.amazon.com/gp/mas/dl/android?p=dev.loker.apps.barbers_incomes" target="_blank" >Barbers Incomes</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
     </body>
 </html>

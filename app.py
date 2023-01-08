@@ -9,10 +9,12 @@ from BackgroundRemover import BackgroundRemover
 PORT = 5000
 app = Flask(__name__, static_folder='static', static_url_path='/')
 
-UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files/uploaded')
-PROCESSED_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'files/processed')
+UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), BackgroundRemover.INPUT_PATH)
+PROCESSED_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), BackgroundRemover.OUTPUT_PATH)
+TMP_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), BackgroundRemover.TMP_PATH)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['PROCESSED_FOLDER'] = PROCESSED_FOLDER
+app.config['TMP_FOLDER'] = TMP_FOLDER
 app.config['SECRET_KEY'] = 'Sick Rat'
 
 now = time.time() # datetime.utcnow().strftime("%Y%m%dT%H%M%S")
@@ -84,12 +86,17 @@ def delete(code):
     if code in files:
         path1 = os.path.join(UPLOAD_FOLDER, code)
         name = code.split('.')[0]
-        path2 = os.path.join(PROCESSED_FOLDER, name + '.png')
-        path3 = os.path.join(PROCESSED_FOLDER, name + '_' + BackgroundRemover.RESULT_TYPE + '.webm')
+        path2 = os.path.join(PROCESSED_FOLDER, name + '.jpg')
+        path3 = os.path.join(PROCESSED_FOLDER, name + '.png')
+        path4 = os.path.join(TMP_FOLDER, name + '.jpg')
+        path5 = os.path.join(PROCESSED_FOLDER, name + '_' + BackgroundRemover.RESULT_TYPE + '.webm')
+        
         if os.path.exists(path1):
+            os.remove(path1)
             os.path.exists(path2) and os.remove(path2)
             os.path.exists(path3) and os.remove(path3)
-            os.remove(path1)
+            os.path.exists(path4) and os.remove(path4)
+            os.path.exists(path5) and os.remove(path5)
             return redirect(url_for('index'))
     abort(404)
 
@@ -116,8 +123,8 @@ def __get_files(path):
 
 
 
-def cleanFiles(): # 30 * 86400 # 60 * 60
-    timer = 3000000 * 86400 # 60 minutes
+def cleanFiles(): 
+    timer = 60 * 60 # 60 minutes : 60 * 60      30 days : 30 * 86400
     for filename in os.listdir(UPLOAD_FOLDER):
         path = os.path.join(UPLOAD_FOLDER, filename)
         if os.path.getmtime(path) < now - timer:

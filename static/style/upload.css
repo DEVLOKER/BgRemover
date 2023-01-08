@@ -1,3 +1,6 @@
+body{
+    margin: 0;
+}
 .headerContainer{
     position: fixed;
     display: flex; justify-content: space-around; align-items: center;
@@ -15,6 +18,11 @@
 
 .headerContainer span.info {
     font-size: 12px;
+}
+
+
+.bodyContainer {
+    min-height: calc(100vh - 200px);
 }
 
 .info {
@@ -95,6 +103,7 @@ fieldset .imageContainer, fieldset .videoContainer{
 }
 fieldset .videoContainer video {
     width: 100%;
+    min-height: 300px;
     height: auto;
     border-radius: 10px;
 }
@@ -104,6 +113,8 @@ fieldset .hiddenAction {
     width: 100%;
     padding: 0px;
     border-radius: 0px 0px 10px 10px;
+    display: flex;
+    justify-content: space-around;
     visibility: hidden;
     opacity: 0;
     transition: visibility 0s, opacity 0.5s linear;
@@ -112,25 +123,39 @@ fieldset.uploadedFiles .hiddenAction {
     background: rgba(255, 0, 0, 0.8);
 }
 fieldset.processedFiles .hiddenAction {
-    background: rgba(0, 255, 0, 0.8);
+    /* background: rgba(0, 255, 0, 0.8); */
+    background: rgba(90, 121, 232, 0.8);
 }
+fieldset.processedFiles .hiddenAction a{
+    background: aliceblue;
+    padding: 0px 15px;
+}
+
 fieldset .hiddenAction a{
     text-decoration: none;
 }
 fieldset .hiddenAction a p{
     width: 100%;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bolder;
 }
 fieldset.uploadedFiles .hiddenAction a p{
     color: #fff;
 }
-fieldset.processedFiles .hiddenAction a p{
+fieldset.processedFiles .hiddenAction a p.png{
     color: #666;
+}
+fieldset.processedFiles .hiddenAction a p.jpg{
+    color: #5a79e8;
 }
 fieldset .imageContainer:hover > .hiddenAction, fieldset .videoContainer:hover > .hiddenAction{
     visibility: visible;
     opacity: 1;
+}
+
+fieldset .videoContainer:hover > video{
+    min-height: 244px;
+    border-radius: 10px 10px 0px 0px;
 }
 
 .processingContainer {
@@ -150,4 +175,45 @@ fieldset .imageContainer:hover > .hiddenAction, fieldset .videoContainer:hover >
     font-size: 30px;
     color: #fff;
     font-weight: bolder;
+}
+
+
+
+
+
+
+.FooterContainer{
+    display: flex; justify-content: space-around; align-items: flex-start;
+    width: 100%;
+    padding-bottom: 10px;
+    background: #242729;
+    box-shadow: 0px 0px 5px 1px #999;
+    z-index: 10;
+}
+
+.FooterContainer div.col{
+    display: flex; justify-content: flex-start; align-items: flex-start; flex-direction: column;
+    max-width: 33%;
+}
+
+.FooterContainer div.col .title{
+    
+}
+.FooterContainer div.col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.FooterContainer div.col ul li{
+    margin-top: 5px;
+}
+
+.FooterContainer .info {
+    color: aliceblue;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    text-align: left;
+}
+.FooterContainer .link{
+    font-size: 12px;
 }

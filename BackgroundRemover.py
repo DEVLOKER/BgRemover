@@ -18,7 +18,7 @@ class BackgroundRemover(object):
     CKPT_PATH = "modnet/pretrained/modnet_photographic_portrait_matting.ckpt"
     INPUT_PATH = "files/uploaded"
     OUTPUT_PATH = "files/processed"
-    # TMP_PATH = "files/tmp"
+    TMP_PATH = "files/tmp"
     # define hyper-parameters
     REF_SIZE = 512
     RESULT_TYPE = 'fg' # matte - save the alpha matte; fg - save the foreground
@@ -47,7 +47,6 @@ class BackgroundRemover(object):
             weights = torch.load(BackgroundRemover.CKPT_PATH, map_location=torch.device('cpu'))
         self.modnet.load_state_dict(weights)
         self.modnet.eval()
-
 
 
     def processImage(self, im_name):
@@ -95,11 +94,19 @@ class BackgroundRemover(object):
         # resize and save matte
         matte = F.interpolate(matte, size=(im_h, im_w), mode='area')
         matte = matte[0][0].data.cpu().numpy()
-        matte_name = im_name.split('.')[0] + '.png'
+        matte_name = im_name.split('.')[0] + '.jpg'
         matte = Image.fromarray(((matte * 255).astype('uint8')), mode='L')
-        combined = self.__combine(image, matte)
-        combined.save(os.path.join(BackgroundRemover.OUTPUT_PATH, matte_name))
-        return matte_name
+        # matte.save(os.path.join(BackgroundRemover.TMP_PATH, matte_name))
+        
+        combined = BackgroundRemover.combine(image, matte)
+        combined_name = im_name.split('.')[0] + '.jpg'
+        combined.save(os.path.join(BackgroundRemover.OUTPUT_PATH, combined_name))
+
+        transparent_combined_name = im_name.split('.')[0] + '.png'
+        transparent_combined = BackgroundRemover.makePngImage(image, matte, combined)
+        transparent_combined.save(os.path.join(BackgroundRemover.OUTPUT_PATH, transparent_combined_name))
+
+        return combined_name, transparent_combined_name
 
 
 
@@ -188,7 +195,10 @@ class BackgroundRemover(object):
                     self.processVideo(fileName)
 
 
-    def __combine(self, image, matte):
+
+
+    @staticmethod
+    def combine(image, matte):
 
         # obtain predicted foreground
         image = np.asarray(image)
@@ -201,4 +211,22 @@ class BackgroundRemover(object):
         matte = np.repeat(np.asarray(matte)[:, :, None], 3, axis=2) / 255
         combined = image * matte + np.full(image.shape, 255) * (1 - matte)
         combined = Image.fromarray(np.uint8(combined))
+
         return combined
+
+
+    @staticmethod
+    def makePngImage(image, matte, combined):
+        png = Image.new(mode="RGBA", size=image.size, color = (255, 255, 255, 0))
+        rgbaImage = image.convert("RGBA")
+        rgbaCombined = combined.convert("RGBA")
+        for y in range(image.size[1]):
+            for x in range(image.size[0]):
+                matte_Pixel = matte.getpixel((x,y))
+                image_Pixel = rgbaImage.getpixel((x,y))
+                combined_Pixel = rgbaCombined.getpixel((x,y))
+
+                if image_Pixel == combined_Pixel or matte_Pixel > 200:
+                    png.putpixel((x,y), combined_Pixel)
+
+        return png
