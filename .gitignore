@@ -2,8 +2,8 @@
 
 # dependencies
 __pycache__/*
-/files/uploaded/*
-/files/processed/*
+# /files/uploaded/*
+# /files/processed/*
 /files/tmp/*
 # .gitignore
 *.pyc
