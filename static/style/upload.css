@@ -194,6 +194,8 @@ fieldset .videoContainer:hover > video{
 .FooterContainer div.col{
     display: flex; justify-content: flex-start; align-items: flex-start; flex-direction: column;
     max-width: 33%;
+    text-align: justify;
+  	text-justify: inter-word;
 }
 
 .FooterContainer div.col .title{
